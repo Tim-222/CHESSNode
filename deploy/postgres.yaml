@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgisdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgisdb
+  template:
+    metadata:
+      labels:
+        app: postgisdb
+    spec:
+      containers:
+      - name: postgisdb
+        image: fosterACR.azurecr.io/apimpostgres:4.0.0
+        readinessProbe:
+         tcpSocket:
+          port: 5432
+         initialDelaySeconds: 5
+         periodSeconds: 10
+        livenessProbe:
+         tcpSocket:
+          port: 5432
+         initialDelaySeconds: 15
+         periodSeconds: 20
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 5432
+        envFrom:
+            - configMapRef:
+                name: postgres-config
+        volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres
+      imagePullSecrets:
+      - name: foster
+      volumes:
+      - name: postgres
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgisdb

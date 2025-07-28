@@ -1,0 +1,23 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: uudex
+spec:
+  replicas: 1
+  override:
+    service:
+      spec:
+        ports:
+          - name: mqtt # adds an additional port on the service
+            protocol: TCP
+            port: 1883
+    statefulSet:
+      spec:
+        template:
+          spec:
+            containers:
+              - name: rabbitmq
+                ports:
+                  - containerPort: 1883 # opens an additional port on the rabbitmq server container
+                    name: mqtt
+                    protocol: TCP

@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: coreapi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coreapi
+  labels:
+    app: coreapi
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+    protocol: TCP
+  selector:
+    app: coreapi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coreapi
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coreapi
+  template:
+    metadata:
+      labels:
+        app: coreapi
+        version: v1
+    spec:
+      containers:
+      - name: coreapi
+        image: timfa/coreapi:latest
+        resources:
+          requests:
+            cpu: 10m
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: "PFX_CERT_PATH"
+          value: "uudex.pfx"
+        - name: "PFX_CERT_PASS"
+          value: "flexchess1234"
+        - name: "CHESS_NODE"
+          value: "<APP ID>"
+        - name: "CHESS_PREFIX"
+          value: "it-"
+        - name: "AUTH_TOKEN"
+          value: "<JWT TOKEN>"
+        - name: "adtServiceUrl"
+          value: "<ADT URL>"
+        - name: "adtClientId"
+          value: "<adtClientId>"
+        - name: "adtClientSecret"
+          value: "<adtClientSecret>"
+        - name: "adtTenantId"
+          value: "<adtTenantId>"
+      nodeSelector:
+         kubernetes.io/arch: amd64
+         

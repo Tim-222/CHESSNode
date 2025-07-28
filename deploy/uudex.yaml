@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: uudexserver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: uudexserver
+  labels:
+    app: uudexserver
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3546
+    targetPort: 3546
+    name: http
+    protocol: TCP
+  selector:
+    app: uudexserver
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uudexserver-v1
+  labels:
+    version: v4
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uudexserver
+  template:
+    metadata:
+      labels:
+        app: uudexserver
+        version: v1
+    spec:
+      containers:
+      - name: uudexserver
+        image: timfa/uudex:latest
+        resources:
+          requests:
+            cpu: 10m
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3546
+      volumes:
+      - name: postgres
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
