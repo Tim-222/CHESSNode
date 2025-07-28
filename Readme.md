@@ -161,6 +161,14 @@ Core API yaml file:
           value: "it-"
         - name: "AUTH_TOKEN"
           value: "<Token>"
+        - name: "adtServiceUrl"
+          value: "<ADT URL>"
+        - name: "adtClientId"
+          value: "<adtClientId>"
+        - name: "adtClientSecret"
+          value: "<adtClientSecret>"
+        - name: "adtTenantId"
+          value: "<adtTenantId>"
       nodeSelector:
          kubernetes.io/arch: amd64
 ```
