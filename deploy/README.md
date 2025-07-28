@@ -2,6 +2,7 @@ CHESS deployment overview
 -------------------------
 
 CHESS assets are deployed and registered with their corresponding Digital twins using adapters, which provide a common set of abstractions of CHESS assets. This is supported using the RabbitMQ broker, UUDEX and AAS Server as well as the core network API functions as shown below.  These are deployed in a CHESS node K3S environment which exposes a secure API gateway to access the AAS Server, UUDEX and core APIs.
+The digital twin environment must contain the necessary AAS data models and digital twin instances, which can use the examples in ExportedGraph.json, by importing them through the DT explorer UI.  
 
 ![Alt text](images/CHESSNode.png)
 
