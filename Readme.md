@@ -2,7 +2,7 @@
 ------------
 Connected Hybrid Energy Storage System (CHESS) Nodes facilitate distributed energy management to support Flexibility Services such as load shifting and peak shaving using flexible energy assets, such as EV chargers, HVAC and battery storage systems.
 
-CHESS nodes support adapters (containers),  which in turn connect with the virtual storage assets and interface with the Azure digital twin environment to permit multiple asset types and distributed deployment. 
+CHESS nodes support adapters (containers),  which in turn connect with the virtual storage assets and interface with the Azure digital twin environment to permit cooperation between multiple asset types and distributed deployment across CHESS nodes. 
 
 The CHESS node is composed of the AAS Server, Core API (for adapter deployment and status update) and CHESS adapters.
 
