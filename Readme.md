@@ -30,7 +30,7 @@ For further information see the project website: https://flexchess.eu/
 
 The CHESS node requires an API manager instance and UUDEX server to connect to and manage the participants / client endpoints.
 
-The application key (participant ID) for the CHESS node installation is obtained by registering a new application in the API manager and obtaining the corresponding application key,  from the /devportal of the API manager.  The token is passed in the yaml file for the CHESS node core API deployment. 
+The application key (participant ID) for the CHESS node installation is obtained by registering a new application in the API manager (https://github.com/wso2/product-apim)  and obtaining the corresponding application key,  from the /devportal of the API manager or associated key manager (https://www.keycloak.org/).  The token is passed in the yaml file for the CHESS node core API deployment. 
 
 The  UUDEX server is deployed using the yaml file:
 
