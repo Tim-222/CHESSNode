@@ -152,8 +152,6 @@ Core API yaml file:
         - name: "PFX_CERT_PATH"
           value: "uudex.pfx"
         - name: "PFX_CERT_PASS"
-          value: "uudex.pfx"
-        - name: "PFX_CERT_PASS"
           value: "flexchess1234"
         - name: "CHESS_NODE"
           value: "<Participant ID>"
