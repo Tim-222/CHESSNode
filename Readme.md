@@ -14,14 +14,14 @@ Deployment uses a Kubernetes based  environment (such as K3S) using yaml files f
 
 Contents
 --------
-- [1.1 Repository layout](#13-repository-layout)
-- [1.2 Building and running a component locally](#14-building-and-running-a-component-locally)
-- [1.3 Prerequisites checklist](#15-prerequisites-checklist)
-- [1.4 Prerequisite installation from scratch](#11-prerequisite-installation-from-scratch)
-  - [1.4.1 AAS server / core API Deployment](#111-aas-server--core-api-deployment)
-  - [1.4.2 Postgres for both API manager and UUDEX server](#112-postgres-for-both-api-manager-and-uudex-server)
-  - [1.4.3 RabbitMQ for UUDEX server](#113-rabbitmq-for-uudex-server)
-- [1.5 Adapter installation](#12-adapter-installation)
+- [1.1 Repository layout](#11-repository-layout)
+- [1.2 Building and running a component locally](#12-building-and-running-a-component-locally)
+- [1.3 Prerequisites checklist](#13-prerequisites-checklist)
+- [1.4 Prerequisite installation from scratch](#14-prerequisite-installation-from-scratch)
+  - [1.4.1 AAS server / core API Deployment](#141-aas-server--core-api-deployment)
+  - [1.4.2 Postgres for both API manager and UUDEX server](#142-postgres-for-both-api-manager-and-uudex-server)
+  - [1.4.3 RabbitMQ for UUDEX server](#143-rabbitmq-for-uudex-server)
+- [1.5 Adapter installation](#15-adapter-installation)
 
 
 1.1 Repository layout
