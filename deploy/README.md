@@ -100,3 +100,29 @@ Example status structure for the request to control CHESS operation are invoked 
 }
 
 ```
+
+5) Optimise day-ahead schedules
+--------------------------------
+Rather than setting each CHESS asset's status manually, the AAS Server's optimiser can compute
+and dispatch a day-ahead schedule automatically: given a maximum site power demand limit and a
+day-ahead demand/tariff forecast, it works out which registered assets to charge/discharge and
+when so that predicted grid import never exceeds the limit while predicted cost is minimised,
+then sets each affected CHESS's schedule for you via the EMS adapter - see
+[AASServer/README.md](../AASServer/README.md#day-ahead-cost-minimising-optimiser) for the full
+algorithm. Call the CHESS API `/run/dayahead` operation with the limit and forecast:
+
+```
+{
+  "Limits": [{ "Name": "maxpower", "Unit": "W", "Value": 5000 }],
+  "Demand": [3200, 3000, 2900, ... ],
+  "Tariff": [0.1111, 0.1088, 0.1088, ... ],
+  "PeriodHours": 1,
+  "Recurrence": "daily",
+  "Dispatch": true
+}
+```
+
+This is complementary to, not a replacement for, the real-time limit enforcement that the EMS
+adapter's `polling()` loop performs when a `limit` is passed to its own `/status/{id}` operation
+directly - the day-ahead call plans ahead of time from a forecast, while `polling()` reacts to
+live telemetry against the limit at runtime.
