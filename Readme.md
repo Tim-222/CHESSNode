@@ -1,5 +1,5 @@
-1 CHESS Node
-------------
+CHESS Node
+----------
 Connected Hybrid Energy Storage System (CHESS) Nodes facilitate distributed energy management to support Flexibility Services such as load shifting and peak shaving using flexible energy assets, such as EV chargers, HVAC and battery storage systems.
 
 CHESS nodes support adapters (containers),  which in turn connect with the virtual storage assets and interface with the Azure digital twin environment to permit cooperation between multiple asset types and distributed deployment across CHESS nodes. 
@@ -12,20 +12,74 @@ The CHESS node can be deployed to any cloud VM or physical server, but requires 
 
 Deployment uses a Kubernetes based  environment (such as K3S) using yaml files found in /deploy.
 
-Source code is available from : https://github.com/FlexCHESS/CHESSNode.git
+Contents
+--------
+- [1.1 Repository layout](#13-repository-layout)
+- [1.2 Building and running a component locally](#14-building-and-running-a-component-locally)
+- [1.3 Prerequisites checklist](#15-prerequisites-checklist)
+- [1.4 Prerequisite installation from scratch](#11-prerequisite-installation-from-scratch)
+  - [1.4.1 AAS server / core API Deployment](#111-aas-server--core-api-deployment)
+  - [1.4.2 Postgres for both API manager and UUDEX server](#112-postgres-for-both-api-manager-and-uudex-server)
+  - [1.4.3 RabbitMQ for UUDEX server](#113-rabbitmq-for-uudex-server)
+- [1.5 Adapter installation](#12-adapter-installation)
 
-ACKNOWLEDGEMENT
----------------
 
-The FlexCHESS project has received funding from the
-European Union’s Horizon Europe research and innovation
-programme under the grant agreement No 101096946. This
-work was supported by UK Research and Innovation [grant
-number 10048785]. 
+1.1 Repository layout
+---------------------
 
-For further information see the project website: https://flexchess.eu/
+| Path | Description |
+|------|-------------|
+| `/AASServer` | Asset Administration Shell (AAS) server. Implements the [AAS Part 2](http://industrialdigitaltwin.org/en/content-hub) REST API, exposing CHESS status, capabilities and submodels. ASP.NET Core (`IO.Swagger`). |
+| `/CoreAPI` | Core network API. Handles adapter `/register`, `/init`, `/status` and `/update` operations, deploys adapter containers into the node's K3S cluster, and brokers digital-twin access. ASP.NET Core (`IO.Swagger`). |
+| `/avevaadapter` | Adapter receiving HVAC/PV telemetry from an Aveva PI historian. |
+| `/emsadapter` | Energy Management System (EMS) adapter — estimates cost/priority of assets for flexibility services such as peak shaving and load shifting. |
+| `/evcsadapter` | EV Charging Station (CSMS) monitoring and control adapter. |
+| `/foxBESSadapter` | Adapter for Fox battery energy storage systems (BESS). |
+| `/huaweiBESSadapter` | Adapter for Huawei BESS, including a Modbus-to-MQTT bridge (`huawei2mqtt.py`). |
+| `/smaBESSadapter` | Adapter for SMA BESS, built on SBFspot. |
+| `/hvacadapter` | Simulated HVAC/building adapter, emulating HVAC as virtual energy storage. |
+| `/deploy` | Kubernetes/K3S manifests (`*.yaml`) for AAS Server, Core API, UUDEX, RabbitMQ and Postgres, plus an example DTDL graph (`ExportedGraph.json`) and a deployment walkthrough ([deploy/README.md](deploy/README.md)). |
+| `/doc` | Background documentation: flexibility/digital-twin concepts ([doc/Readme.md](doc/Readme.md)), the AAS Server design doc, and a digital-twin paper (PDFs). |
 
-1.1 Prerequisite installation from scratch
+Each adapter directory contains its own `README.md` with adapter-specific build steps and an example `/register` payload — see the links in the table above.
+
+1.2 Building and running a component locally
+---------------------------------------------
+
+Every component (`AASServer`, `CoreAPI`, and each `*adapter`) is a standalone .NET (ASP.NET Core) project generated from a Swagger/OpenAPI spec, and can be built either natively or as a Docker image.
+
+Native build (from within the component directory):
+
+```
+sh build.sh          # Linux/macOS
+build.bat             # Windows
+```
+
+This runs `dotnet restore` and `dotnet build` against `src/IO.Swagger/`, then prints the `dotnet run` command to start the project.
+
+Docker build (from within the component directory, where a `Dockerfile` is present):
+
+```
+docker build -t <component>:latest .
+docker run -p 5000:5000 <component>:latest
+```
+
+Adapters are not run standalone in production — they are deployed into a CHESS node's K3S cluster via the Core API `/register` operation (see [1.2 Adapter installation](#12-adapter-installation)), which pulls the container image named in the `Container` field of the register payload and invokes the adapter's `/init` endpoint.
+
+1.3 Prerequisites checklist
+----------------------------
+
+Before deploying a CHESS node, the following must already be available (see [1.1 Prerequisite installation from scratch](#11-prerequisite-installation-from-scratch) for full setup steps):
+
+- A Kubernetes-compatible cluster, e.g. K3S ([1.1.1](#111-aas-server--core-api-deployment))
+- [WSO2 API Manager](https://github.com/wso2/product-apim) instance, used to issue the application key (participant ID) and auth token for the node
+- [UUDEX server](https://github.com/pnnl/UUDEX/tree/main/server), backed by:
+  - Postgres ([1.1.2](#112-postgres-for-both-api-manager-and-uudex-server))
+  - RabbitMQ, deployed via the [RabbitMQ Cluster Operator](https://www.rabbitmq.com/kubernetes/operator/install-operator) ([1.1.3](#113-rabbitmq-for-uudex-server))
+- An Azure Digital Twins instance, reachable via a service principal (`adtServiceUrl`, `adtClientId`, `adtClientSecret`, `adtTenantId`)
+- .NET SDK and Docker, for building/packaging AAS Server, Core API and adapter images locally
+
+1.4 Prerequisite installation from scratch
 -------------------------------------------
 
 The CHESS node requires an API manager instance (https://github.com/wso2/product-apim) and UUDEX server (https://github.com/pnnl/UUDEX/tree/main/server) to connect to and manage the participants / client endpoints.
@@ -89,7 +143,7 @@ The  UUDEX server is deployed using the yaml file:
 Note that the UUDEX server requires the postgres database and RabbitMQ to be installed first.
 
 
-1.1.1 AAS server / core API Deployment
+1.4.1 AAS server / core API Deployment
 ---------------------------------------
 
 The AAS server and core API are deployed once the other prerequisites have been setup using :
@@ -180,7 +234,7 @@ kubectl get nodes -o wide
 
 
 
-1.1.2	Postgres for both API manager and UUDEX server
+1.4.2	Postgres for both API manager and UUDEX server
 ------------------------------------------------------
 Postgres is installed using three yaml files. The first creates a persistent storage volume that is used for storing the data.
 ```
@@ -292,12 +346,12 @@ The database uudex is created for the UUDEX server.
  kubectl exec -it <postgisdb pod> -- bash
  createdb -U postgres uudex
  createuser uudex_user
- psql -u uudex_user uudex
+ psql -U uudex_user uudex
  \i /tmp/uudex_dump.sql
  alter role uudex_user with password ‘password’;
 ```
 
-1.1.3	RabbitMQ for UUDEX server
+1.4.3	RabbitMQ for UUDEX server
 ---------------------------------
 
 The RabbitMQ broker is setup using the Kubernetes  operator which is installed as follows (https://www.rabbitmq.com/kubernetes/operator/install-operator):
@@ -353,7 +407,7 @@ where the rabbitmq_modify.yaml contains:
 ```
 
 
-1.2	Adapter installation
+1.5	Adapter installation
 -------------------------
 
 The CHESS adapters are installed using the Network core API /register operation with the appropriate Authorization bearer token.  
@@ -402,3 +456,16 @@ Subjects are created on registration of the adapter along with the necessary per
 ```
 <country prefix>-<asset owner or operator>-<asset id>[-sim]<name>
 ```
+
+
+ACKNOWLEDGEMENT
+---------------
+
+The FlexCHESS project has received funding from the
+European Union’s Horizon Europe research and innovation
+programme under the grant agreement No 101096946. This
+work was supported by UK Research and Innovation [grant
+number 10048785]. 
+
+For further information see the project website: https://flexchess.eu/
+
