@@ -31,40 +31,14 @@ Contents
 
 | Path | Description |
 |------|-------------|
-| `/AASServer` | Asset Administration Shell (AAS) server. Implements the [AAS Part 2](http://industrialdigitaltwin.org/en/content-hub) REST API, exposing CHESS status, capabilities and submodels. ASP.NET Core (`IO.Swagger`). |
-| `/CoreAPI` | Core network API. Handles adapter `/register`, `/init`, `/status` and `/update` operations, deploys adapter containers into the node's K3S cluster, and brokers digital-twin access. ASP.NET Core (`IO.Swagger`). |
-| `/avevaadapter` | Adapter receiving HVAC/PV telemetry from an Aveva PI historian. |
-| `/emsadapter` | Energy Management System (EMS) adapter — estimates cost/priority of assets for flexibility services such as peak shaving and load shifting. |
-| `/evcsadapter` | EV Charging Station (CSMS) monitoring and control adapter. |
-| `/foxBESSadapter` | Adapter for Fox battery energy storage systems (BESS). |
-| `/huaweiBESSadapter` | Adapter for Huawei BESS, including a Modbus-to-MQTT bridge (`huawei2mqtt.py`). |
-| `/smaBESSadapter` | Adapter for SMA BESS, built on SBFspot. |
-| `/hvacadapter` | Simulated HVAC/building adapter, emulating HVAC as virtual energy storage. |
 | `/deploy` | Kubernetes/K3S manifests (`*.yaml`) for AAS Server, Core API, UUDEX, RabbitMQ and Postgres, plus an example DTDL graph (`ExportedGraph.json`) and a deployment walkthrough ([deploy/README.md](deploy/README.md)). |
-| `/doc` | Background documentation: flexibility/digital-twin concepts ([doc/Readme.md](doc/Readme.md)), the AAS Server design doc, and a digital-twin paper (PDFs). |
 
-Each adapter directory contains its own `README.md` with adapter-specific build steps and an example `/register` payload — see the links in the table above.
 
-1.2 Building and running a component locally
----------------------------------------------
+
+1.2 Running a component locally
+---------------------------------------
 
 Every component (`AASServer`, `CoreAPI`, and each `*adapter`) is a standalone .NET (ASP.NET Core) project generated from a Swagger/OpenAPI spec, and can be built either natively or as a Docker image.
-
-Native build (from within the component directory):
-
-```
-sh build.sh          # Linux/macOS
-build.bat             # Windows
-```
-
-This runs `dotnet restore` and `dotnet build` against `src/IO.Swagger/`, then prints the `dotnet run` command to start the project.
-
-Docker build (from within the component directory, where a `Dockerfile` is present):
-
-```
-docker build -t <component>:latest .
-docker run -p 5000:5000 <component>:latest
-```
 
 Adapters are not run standalone in production — they are deployed into a CHESS node's K3S cluster via the Core API `/register` operation (see [1.2 Adapter installation](#12-adapter-installation)), which pulls the container image named in the `Container` field of the register payload and invokes the adapter's `/init` endpoint.
 
