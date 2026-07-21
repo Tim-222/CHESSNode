@@ -17,7 +17,7 @@ For source code see - https://github.com/FlexCHESS/CHESSNode/tree/master
 Contents
 --------
 - [1.1 Repository layout](#11-repository-layout)
-- [1.2 Building and running a component locally](#12-building-and-running-a-component-locally)
+- [1.2 Running a component locally](#12-running-a-component-locally)
 - [1.3 Prerequisites checklist](#13-prerequisites-checklist)
 - [1.4 Prerequisite installation from scratch](#14-prerequisite-installation-from-scratch)
   - [1.4.1 AAS server / core API Deployment](#141-aas-server--core-api-deployment)
