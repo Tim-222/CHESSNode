@@ -12,6 +12,8 @@ The CHESS node can be deployed to any cloud VM or physical server, but requires 
 
 Deployment uses a Kubernetes based  environment (such as K3S) using yaml files found in /deploy.
 
+For source code see - https://github.com/FlexCHESS/CHESSNode/tree/master
+
 Contents
 --------
 - [1.1 Repository layout](#11-repository-layout)
