@@ -24,7 +24,7 @@ The DTDL consists of the digital twin model which defines the data semantic stru
 2) Import DTDL into Azure environment
 -------------------------------------
 
-The DT explorer (https://preprodapim.umbrellaiot.com:9096) can be used to import the CHESS into the DT environemnt in Azure if the CHESS adapters do not support on the fly creation of digital twin instances.
+The DT explorer can be used to import the CHESS into the DT environemnt in Azure if the CHESS adapters do not support on the fly creation of digital twin instances.
 
 ![Alt text](images/upload.png)
 
@@ -108,7 +108,7 @@ and dispatch a day-ahead schedule automatically: given a maximum site power dema
 day-ahead demand/tariff forecast, it works out which registered assets to charge/discharge and
 when so that predicted grid import never exceeds the limit while predicted cost is minimised,
 then sets each affected CHESS's schedule for you via the EMS adapter - see
-[AASServer/README.md](../AASServer/README.md#day-ahead-cost-minimising-optimiser) for the full
+[AASServer/README.md]([https://github.com/FlexCHESS/CHESSNode/blob/master/AASServer/README.md]) for the full
 algorithm. Call the CHESS API `/run/dayahead` operation with the limit and forecast:
 
 ```
