@@ -108,7 +108,7 @@ and dispatch a day-ahead schedule automatically: given a maximum site power dema
 day-ahead demand/tariff forecast, it works out which registered assets to charge/discharge and
 when so that predicted grid import never exceeds the limit while predicted cost is minimised,
 then sets each affected CHESS's schedule for you via the EMS adapter - see
-[AASServer/README.md]([https://github.com/FlexCHESS/CHESSNode/blob/master/AASServer/README.md]) for the full
+[AASServer](https://github.com/FlexCHESS/CHESSNode/blob/master/AASServer/README.md) for the full
 algorithm. Call the CHESS API `/run/dayahead` operation with the limit and forecast:
 
 ```
