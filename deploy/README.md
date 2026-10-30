@@ -64,9 +64,7 @@ The register operation takes the following JSON example payload.
 
 4) Explore data
 ---------------
-The data relating to the digital twin can be explored using the DT explorer (https://preprodapim.umbrellaiot.com:9096) and the corresponding AAS Server provided APIs through the CHESS node.
-
-![Alt text](images/history.png)
+The data relating to the digital twin can be explored using the DT explorer and the corresponding AAS Server provided APIs through the CHESS node.
 
 The AAS Server APIs permit the retrieval of the status and capabilities including submodels provided for a CHESS by the adapter. Also, the viewing of the CHESS status and power profile information.
 ![Alt text](images/AASServer1.png)
