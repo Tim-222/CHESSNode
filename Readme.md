@@ -349,7 +349,7 @@ Once deployed the RabbitMQ MQTT broker plugin capabilities can be enabled if the
 	rabbitmqctl enable_feature_flag rabbit_mqtt_qos0_queue
 ```
 
-The RabbitMQ UI is accessible on port 15672 and permits admin login using the credentials that are automatically generated on installation (see Figure 4). These are stored in a secret called uudex-default-user. This can be viewed using:
+The RabbitMQ UI is accessible on port 15672 and permits admin login using the credentials that are automatically generated on installation. These are stored in a secret called uudex-default-user. This can be viewed using:
 kubectl get secrets uudex-default-user -o yaml
 
 The user uudex-user needs to be created with password umbrella2021 and management tag and permission to access the /* virtual host.
